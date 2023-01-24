@@ -51,7 +51,7 @@ class BaseClan:
         The clan's level.
     """
 
-    __slots__ = ("tag", "name", "_client", "badge", "level", "_response_retry")
+    __slots__ = ("tag", "name", "_client", "badge", "level", "_response_retry", "_raw_data")
 
     def __str__(self):
         return self.name
@@ -70,6 +70,7 @@ class BaseClan:
         self.name = data.get("name")
         self.badge = try_enum(Badge, data=data.get("badgeUrls"), client=self._client)
         self.level = data.get("clanLevel")
+        self._raw_data = data if client.raw_attribute else None
 
     @property
     def share_link(self) -> str:
@@ -125,7 +126,7 @@ class BasePlayer:
         The player's name
     """
 
-    __slots__ = ("tag", "name", "_client", "_response_retry")
+    __slots__ = ("tag", "name", "_client", "_response_retry", "_raw_data")
 
     def __str__(self):
         return self.name
@@ -139,7 +140,7 @@ class BasePlayer:
     def __init__(self, *, data, client, **_):
         self._client = client
         self._response_retry = data.get("_response_retry")
-
+        self._raw_data = data if client.raw_attribute else None
         self.tag = data.get("tag")
         self.name = data.get("name")
 
